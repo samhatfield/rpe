@@ -107,8 +107,11 @@ MODULE rp_emulator
         MODULE PROCEDURE assign_alternate_rpe
         MODULE PROCEDURE assign_integer_rpe
         MODULE PROCEDURE assign_long_rpe
-        MODULE PROCEDURE assign_rpe_complex_real_complex
         MODULE PROCEDURE assign_rpe_complex_rpe_complex
+        MODULE PROCEDURE assign_rpe_complex_real_complex
+        MODULE PROCEDURE assign_rpe_complex_alternate_complex
+        MODULE PROCEDURE assign_real_complex_rpe_complex
+        MODULE PROCEDURE assign_alternate_complex_rpe_complex
     END INTERFACE
 
 !-----------------------------------------------------------------------
@@ -599,12 +602,10 @@ CONTAINS
         TYPE(rpe_var) :: re
         TYPE(rpe_var) :: im
         rpe%val = x
-        re%val = realpart(rpe%val)
-        im%val = imagpart(rpe%val)
         re%sbits = rpe%sbits
         im%sbits = rpe%sbits
-        CALL apply_truncation (re)
-        CALL apply_truncation (im)
+        re = realpart(rpe%val)
+        im = imagpart(rpe%val)
         rpe%val = CMPLX(re%val, im%val)
     END SUBROUTINE assign_rpe_complex_real_complex
 
@@ -621,17 +622,70 @@ CONTAINS
     !
         TYPE(rpe_complex_var), INTENT(INOUT) :: r1
         TYPE(rpe_complex_var), INTENT(IN)    :: r2
-        TYPE(rpe_var) :: re
-        TYPE(rpe_var) :: im
+        TYPE(rpe_var) :: re, im
         r1%val = r2%val
-        re%val = realpart(r1%val)
-        im%val = imagpart(r1%val)
         re%sbits = r1%sbits
         im%sbits = r1%sbits
-        CALL apply_truncation (re)
-        CALL apply_truncation (im)
+        re = realpart(r1%val)
+        im = imagpart(r1%val)
         r1%val = CMPLX(re%val, im%val)
     END SUBROUTINE assign_rpe_complex_rpe_complex
+
+    ELEMENTAL SUBROUTINE assign_rpe_complex_alternate_complex (rpe, x)
+    ! Assign a real complex variable to an `rpe_complex_type` instance.
+    !
+    ! Arguments:
+    !
+    ! * rpe: class(rpe_complex_type) [input/output]
+    !       An `rpe_complex_type` instance to assign to.
+    !
+    ! * x: complex(kind=RPE_ALTERNATE_KIND) [input]
+    !       A real complex variable whose value will be assigned to `rpe`.
+    !
+        TYPE(rpe_complex_var),            INTENT(INOUT) :: rpe
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN)    :: x
+        TYPE(rpe_var) :: re, im
+        rpe%val = x
+        re%sbits = rpe%sbits
+        im%sbits = rpe%sbits
+        re = realpart(rpe%val)
+        im = imagpart(rpe%val)
+        rpe%val = CMPLX(re%val, im%val)
+
+    END SUBROUTINE assign_rpe_complex_alternate_complex
+
+    ELEMENTAL SUBROUTINE assign_real_complex_rpe_complex (x, rpe)
+    ! Assign an `rpe_complex_type` instance to a real complex variable.
+    !
+    ! Arguments:
+    !
+    ! * x: complex(kind=RPE_REAL_KIND) [input/output]
+    !       A real complex variable assign to.
+    !
+    ! * rpe: class(rpe_complex_type) [input]
+    !       An `rpe_complex_type` instance whose value will be assigned to `x`.
+    !
+        COMPLEX(KIND=RPE_REAL_KIND), INTENT(INOUT) :: x
+        TYPE(rpe_complex_var),       INTENT(IN)    :: rpe
+        x = rpe%val
+    END SUBROUTINE assign_real_complex_rpe_complex
+
+    ELEMENTAL SUBROUTINE assign_alternate_complex_rpe_complex (x, rpe)
+    ! Assign an `rpe_complex_type` instance to a real complex variable.
+    !
+    ! Arguments:
+    !
+    ! * x: complex(kind=RPE_ALTERNATE_KIND) [input/output]
+    !       A real complex variable assign to.
+    !
+    ! * rpe: class(rpe_complex_type) [input]
+    !       An `rpe_complex_type` instance whose value will be assigned to `x`.
+    !
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(INOUT) :: x
+        TYPE(rpe_complex_var),            INTENT(IN)    :: rpe
+        x = rpe%val
+    END SUBROUTINE assign_alternate_complex_rpe_complex
+
 
 !-----------------------------------------------------------------------
 ! Overloaded operator definitions (external):

@@ -96,6 +96,10 @@ MODULE rp_emulator
 
     ! Make the core emulator routines importable.
     PUBLIC :: apply_truncation, significand_bits
+    INTERFACE apply_truncation
+        MODULE PROCEDURE apply_truncation_real
+        MODULE PROCEDURE apply_truncation_complex
+    END INTERFACE
 
     PUBLIC ASSIGNMENT(=)
     INTERFACE ASSIGNMENT(=)
@@ -141,7 +145,7 @@ CONTAINS
 ! Core emulator procedures:
 !-----------------------------------------------------------------------
 
-    ELEMENTAL SUBROUTINE apply_truncation (x)
+    ELEMENTAL SUBROUTINE apply_truncation_real (x)
     ! Reduce the precision of a `rpe_type` instance.
     !
     ! Truncates the given floating-point number significand to the
@@ -175,7 +179,45 @@ CONTAINS
             END IF
             x%val = truncate_significand(y, n)
         END IF
-    END SUBROUTINE apply_truncation
+    END SUBROUTINE apply_truncation_real
+
+    ELEMENTAL SUBROUTINE apply_truncation_complex (x)
+    ! Reduce the precision of a `rpe_complex_var` instance.
+    !
+    ! Truncates the significands of the two floating-point numbers comprising
+    ! the given complex number to the number of bits defined by the `sbits`
+    ! member of the number. If the `sbits` attribute is not set it will truncate
+    ! to the number of bits specified by the current value of `RPE_DEFAULT_SBITS`.
+    !
+    ! If the module variable RPE_ACTIVE is false this subroutine returns
+    ! the unaltered input value, it only performs the bit truncation if
+    ! RPE_ACTIVE is true.
+    !
+    ! Argument:
+    !
+    ! * x: type(rpe_complex_var) [input/output]
+    !     The `rpe_complex_var` instance to truncate.
+    !
+        TYPE(rpe_complex_var), INTENT(INOUT) :: x
+        REAL(KIND=RPE_DOUBLE_KIND)           :: re, im
+        INTEGER :: n
+        IF (RPE_ACTIVE) THEN
+            ! Split the input into real and imaginary parts, and cast each to a
+            ! double-precision value.
+            re = REAL(realpart(x%val), RPE_DOUBLE_KIND)
+            im = REAL(imagpart(x%val), RPE_DOUBLE_KIND)
+            IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
+                ! If the input does not have a specified precision then assume
+                ! the default precision. This is does not fix the precision of
+                ! the input variable, it will still use whatever is specified
+                ! as the default, even if that changes later.
+                n = RPE_DEFAULT_SBITS
+            ELSE
+                n = x%sbits
+            END IF
+            x%val = CMPLX(truncate_significand(re, n), truncate_significand(im, n))
+        END IF
+    END SUBROUTINE apply_truncation_complex
 
     ELEMENTAL FUNCTION truncate_significand (x, n) RESULT (t)
     ! Truncate the significand of a double precision floating point
@@ -613,11 +655,7 @@ CONTAINS
         COMPLEX(KIND=RPE_REAL_KIND), INTENT(IN)    :: x
         TYPE(rpe_var) :: re, im
         rpe%val = x
-        re%sbits = rpe%sbits
-        im%sbits = rpe%sbits
-        re = realpart(rpe%val)
-        im = imagpart(rpe%val)
-        rpe%val = CMPLX(re%val, im%val)
+        CALL apply_truncation (rpe)
     END SUBROUTINE assign_rpe_complex_real_complex
 
     ELEMENTAL SUBROUTINE assign_rpe_complex_rpe_complex (r1, r2)
@@ -635,11 +673,7 @@ CONTAINS
         TYPE(rpe_complex_var), INTENT(IN)    :: r2
         TYPE(rpe_var) :: re, im
         r1%val = r2%val
-        re%sbits = r1%sbits
-        im%sbits = r1%sbits
-        re = realpart(r1%val)
-        im = imagpart(r1%val)
-        r1%val = CMPLX(re%val, im%val)
+        CALL apply_truncation (r1)
     END SUBROUTINE assign_rpe_complex_rpe_complex
 
     ELEMENTAL SUBROUTINE assign_rpe_complex_alternate_complex (rpe, x)
@@ -657,12 +691,7 @@ CONTAINS
         COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN)    :: x
         TYPE(rpe_var) :: re, im
         rpe%val = x
-        re%sbits = rpe%sbits
-        im%sbits = rpe%sbits
-        re = realpart(rpe%val)
-        im = imagpart(rpe%val)
-        rpe%val = CMPLX(re%val, im%val)
-
+        CALL apply_truncation (rpe)
     END SUBROUTINE assign_rpe_complex_alternate_complex
 
     ELEMENTAL SUBROUTINE assign_real_complex_rpe_complex (x, rpe)

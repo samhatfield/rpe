@@ -308,6 +308,7 @@ CONTAINS
         TYPE IS (REAL(KIND=RPE_DOUBLE_KIND))
             z = 52
         TYPE IS (rpe_var)
+        TYPE IS (rpe_complex_var)
             IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
                 z = RPE_DEFAULT_SBITS
             ELSE
@@ -597,10 +598,9 @@ CONTAINS
     ! * x: complex(kind=RPE_REAL_KIND) [input]
     !       A real complex variable whose value will be assigned to `rpe`.
     !
-        TYPE(rpe_complex_var),            INTENT(INOUT) :: rpe
+        TYPE(rpe_complex_var),       INTENT(INOUT) :: rpe
         COMPLEX(KIND=RPE_REAL_KIND), INTENT(IN)    :: x
-        TYPE(rpe_var) :: re
-        TYPE(rpe_var) :: im
+        TYPE(rpe_var) :: re, im
         rpe%val = x
         re%sbits = rpe%sbits
         im%sbits = rpe%sbits

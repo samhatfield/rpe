@@ -40,3 +40,106 @@
             END IF
         END IF
     END FUNCTION huge_rpe
+
+    !-------------------------------------------------------------------
+    ! Overloaded definitions for (+):
+    !
+    
+    ELEMENTAL FUNCTION add_rpe_complex (x) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        TYPE(rpe_complex_var) :: z
+        z%sbits = significand_bits(x)
+        z = +(x%val)
+    END FUNCTION add_rpe_complex
+
+    ELEMENTAL FUNCTION add_rpe_complex_rpe_complex (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val + y%val
+    END FUNCTION add_rpe_complex_rpe_complex
+
+    ELEMENTAL FUNCTION add_rpe_complex_real_complex (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        COMPLEX(KIND=RPE_REAL_KIND), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val + y
+    END FUNCTION add_rpe_complex_real_complex
+
+    ELEMENTAL FUNCTION add_rpe_complex_realalt_complex (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val + y
+    END FUNCTION add_rpe_complex_realalt_complex
+
+    ELEMENTAL FUNCTION add_real_complex_rpe_complex (x, y) RESULT (z)
+        COMPLEX(KIND=RPE_REAL_KIND), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x + y%val
+    END FUNCTION add_real_complex_rpe_complex
+
+    ELEMENTAL FUNCTION add_realalt_complex_rpe_complex (x, y) RESULT (z)
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x + y%val
+    END FUNCTION add_realalt_complex_rpe_complex
+
+    !-------------------------------------------------------------------
+    ! Overloaded definitions for (-):
+    !
+
+    ELEMENTAL FUNCTION sub_rpe_complex (x) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        TYPE(rpe_complex_var) :: z
+        z%sbits = significand_bits(x)
+        z = -(x%val)
+    END FUNCTION sub_rpe_complex
+
+    ELEMENTAL FUNCTION sub_rpe_complex_rpe_complex (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val - y%val
+    END FUNCTION sub_rpe_complex_rpe_complex
+
+    ELEMENTAL FUNCTION sub_rpe_complex_real_complex (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        COMPLEX(KIND=RPE_REAL_KIND), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val - y
+    END FUNCTION sub_rpe_complex_real_complex
+
+    ELEMENTAL FUNCTION sub_rpe_complex_realalt_complex (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val - y
+    END FUNCTION sub_rpe_complex_realalt_complex
+
+    ELEMENTAL FUNCTION sub_real_complex_rpe_complex (x, y) RESULT (z)
+        COMPLEX(KIND=RPE_REAL_KIND), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x - y%val
+    END FUNCTION sub_real_complex_rpe_complex
+
+    ELEMENTAL FUNCTION sub_realalt_complex_rpe_complex (x, y) RESULT (z)
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x - y%val
+    END FUNCTION sub_realalt_complex_rpe_complex
+

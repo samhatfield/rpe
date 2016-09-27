@@ -212,7 +212,10 @@ CONTAINS
             ELSE
                 n = x%sbits
             END IF
-            x%val = CMPLX(truncate_significand(re, n), truncate_significand(im, n))
+
+            re = truncate_significand(re, n)
+            im = truncate_significand(im, n)
+            x%val = CMPLX(re, im, RPE_DOUBLE_KIND)
         END IF
     END SUBROUTINE apply_truncation_complex
 
@@ -642,7 +645,6 @@ CONTAINS
     !
         TYPE(rpe_complex_var),       INTENT(INOUT) :: rpe
         COMPLEX(KIND=RPE_REAL_KIND), INTENT(IN)    :: x
-        TYPE(rpe_var) :: re, im
         rpe%val = x
         CALL apply_truncation (rpe)
     END SUBROUTINE assign_rpe_complex_real_complex
@@ -660,7 +662,6 @@ CONTAINS
     !
         TYPE(rpe_complex_var), INTENT(INOUT) :: r1
         TYPE(rpe_complex_var), INTENT(IN)    :: r2
-        TYPE(rpe_var) :: re, im
         r1%val = r2%val
         CALL apply_truncation (r1)
     END SUBROUTINE assign_rpe_complex_rpe_complex
@@ -678,7 +679,6 @@ CONTAINS
     !
         TYPE(rpe_complex_var),            INTENT(INOUT) :: rpe
         COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN)    :: x
-        TYPE(rpe_var) :: re, im
         rpe%val = x
         CALL apply_truncation (rpe)
     END SUBROUTINE assign_rpe_complex_alternate_complex

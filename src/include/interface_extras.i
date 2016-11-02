@@ -20,3 +20,21 @@
         MODULE PROCEDURE sub_real_complex_rpe_complex
         MODULE PROCEDURE sub_realalt_complex_rpe_complex
     END INTERFACE OPERATOR(-)
+
+    INTERFACE OPERATOR(*)
+        MODULE PROCEDURE mul_rpe_complex_rpe_complex
+        MODULE PROCEDURE mul_rpe_complex_real_complex
+        MODULE PROCEDURE mul_rpe_complex_realalt_complex
+        MODULE PROCEDURE mul_real_complex_rpe_complex
+        MODULE PROCEDURE mul_realalt_complex_rpe_complex
+    END INTERFACE OPERATOR(*)
+
+    PUBLIC :: CONJG
+    INTERFACE CONJG
+        MODULE PROCEDURE conjg_rpe_complex
+    END INTERFACE CONJG
+
+    PUBLIC :: REAL
+    INTERFACE REAL
+        MODULE PROCEDURE real_rpe_complex
+    END INTERFACE REAL

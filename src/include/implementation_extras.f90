@@ -208,3 +208,25 @@
         z%sbits = significand_bits(x)
         z = real(x%val)
     END FUNCTION real_rpe_complex
+
+    !-------------------------------------------------------------------
+    ! Overloaded definition for REALPART:
+    !
+
+    ELEMENTAL FUNCTION realpart_rpe_complex (x) RESULT(z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        TYPE(rpe_var) :: z
+        z%sbits = significand_bits(x)
+        z = realpart(x%val)
+    END FUNCTION realpart_rpe_complex
+
+    !-------------------------------------------------------------------
+    ! Overloaded definition for IMAGPART:
+    !
+
+    ELEMENTAL FUNCTION imagpart_rpe_complex (x) RESULT(z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        TYPE(rpe_var) :: z
+        z%sbits = significand_bits(x)
+        z = imagpart(x%val)
+    END FUNCTION imagpart_rpe_complex

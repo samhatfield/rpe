@@ -353,6 +353,11 @@ CONTAINS
         TYPE IS (REAL(KIND=RPE_DOUBLE_KIND))
             z = 52
         TYPE IS (rpe_var)
+            IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
+                z = RPE_DEFAULT_SBITS
+            ELSE
+                z = x%sbits
+            END IF
         TYPE IS (rpe_complex_var)
             IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
                 z = RPE_DEFAULT_SBITS

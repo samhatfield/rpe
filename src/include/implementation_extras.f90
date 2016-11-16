@@ -187,6 +187,38 @@
         z = x * y%val
     END FUNCTION mul_realalt_complex_rpe_complex
 
+    ELEMENTAL FUNCTION mul_rpe_complex_real (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        REAL(KIND=RPE_REAL_KIND), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val * y
+    END FUNCTION mul_rpe_complex_real
+
+    ELEMENTAL FUNCTION mul_rpe_complex_realalt (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        REAL(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x%val * y
+    END FUNCTION mul_rpe_complex_realalt
+
+    ELEMENTAL FUNCTION mul_real_rpe_complex (x, y) RESULT (z)
+        REAL(KIND=RPE_REAL_KIND), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x * y%val
+    END FUNCTION mul_real_rpe_complex
+
+    ELEMENTAL FUNCTION mul_realalt_rpe_complex (x, y) RESULT (z)
+        REAL(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: x
+        TYPE(rpe_complex_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = x * y%val
+    END FUNCTION mul_realalt_rpe_complex
+
     ELEMENTAL FUNCTION mul_rpe_complex_rpe (x, y) RESULT (z)
         TYPE(rpe_complex_var), INTENT(IN) :: x
         TYPE(rpe_var), INTENT(IN) :: y

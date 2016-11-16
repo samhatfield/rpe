@@ -27,6 +27,8 @@
         MODULE PROCEDURE mul_rpe_complex_realalt_complex
         MODULE PROCEDURE mul_real_complex_rpe_complex
         MODULE PROCEDURE mul_realalt_complex_rpe_complex
+        MODULE PROCEDURE mul_rpe_complex_rpe
+        MODULE PROCEDURE mul_rpe_rpe_complex
     END INTERFACE OPERATOR(*)
 
     PUBLIC :: CONJG

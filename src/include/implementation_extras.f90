@@ -278,3 +278,14 @@
         z%sbits = significand_bits(x)
         z = imagpart(x%val)
     END FUNCTION imagpart_rpe_complex
+
+    !-------------------------------------------------------------------
+    ! Overloaded definition for CMPLX:
+    !
+
+    ELEMENTAL FUNCTION cmplx_rpe_var (x, y) RESULT(z)
+        TYPE(rpe_var), INTENT(IN) :: x, y
+        TYPE(rpe_complex_var) :: z
+        z%sbits = MAX(significand_bits(x), significand_bits(y))
+        z = CMPLX(x%val, y%val)
+    END FUNCTION cmplx_rpe_var

@@ -66,7 +66,6 @@ MODULE rp_emulator
     ! This type is a container for a floating-point number which is
     ! operated on in reduced precision.
     !
-        INTEGER :: sbits = RPE_SBITS_UNSPECIFIED
         REAL(KIND=RPE_REAL_KIND) :: val
     END TYPE
 
@@ -77,7 +76,6 @@ MODULE rp_emulator
     ! This type is a container for a complex floating-point number which is
     ! operated on in reduced precision.
     !
-        INTEGER :: sbits = RPE_SBITS_UNSPECIFIED
         COMPLEX(KIND=RPE_REAL_KIND) :: val
     END TYPE
 
@@ -165,15 +163,7 @@ CONTAINS
         IF (RPE_ACTIVE) THEN
             ! Cast the input to a double-precision value.
             y = REAL(x%val, RPE_DOUBLE_KIND)
-            IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
-                ! If the input does not have a specified precision then assume
-                ! the default precision. This is does not fix the precision of
-                ! the input variable, it will still use whatever is specified
-                ! as the default, even if that changes later.
-                n = RPE_DEFAULT_SBITS
-            ELSE
-                n = x%sbits
-            END IF
+            n = RPE_DEFAULT_SBITS
             x%val = truncate_significand(y, n)
         END IF
     END SUBROUTINE apply_truncation_real
@@ -203,15 +193,7 @@ CONTAINS
             ! double-precision value.
             re = REAL(realpart(x%val), RPE_DOUBLE_KIND)
             im = REAL(imagpart(x%val), RPE_DOUBLE_KIND)
-            IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
-                ! If the input does not have a specified precision then assume
-                ! the default precision. This is does not fix the precision of
-                ! the input variable, it will still use whatever is specified
-                ! as the default, even if that changes later.
-                n = RPE_DEFAULT_SBITS
-            ELSE
-                n = x%sbits
-            END IF
+            n = RPE_DEFAULT_SBITS
 
             re = truncate_significand(re, n)
             im = truncate_significand(im, n)
@@ -353,17 +335,9 @@ CONTAINS
         TYPE IS (REAL(KIND=RPE_DOUBLE_KIND))
             z = 52
         TYPE IS (rpe_var)
-            IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
-                z = RPE_DEFAULT_SBITS
-            ELSE
-                z = x%sbits
-            END IF
+            z = RPE_DEFAULT_SBITS
         TYPE IS (rpe_complex_var)
-            IF (x%sbits == RPE_SBITS_UNSPECIFIED) THEN
-                z = RPE_DEFAULT_SBITS
-            ELSE
-                z = x%sbits
-            END IF
+            z = RPE_DEFAULT_SBITS
         TYPE IS (REAL(KIND=RPE_SINGLE_KIND))
             z = 23
         CLASS DEFAULT
@@ -393,9 +367,6 @@ CONTAINS
         REAL(KIND=RPE_REAL_KIND), INTENT(IN) :: x
         INTEGER, OPTIONAL,        INTENT(IN) :: n
         TYPE(rpe_var) :: z
-        IF (PRESENT(n)) THEN
-            z%sbits = n
-        END IF
         z = x
     END FUNCTION rpe_literal_real
 
@@ -421,9 +392,6 @@ CONTAINS
         REAL(KIND=RPE_ALTERNATE_KIND),           INTENT(IN) :: x
         INTEGER,                       OPTIONAL, INTENT(IN) :: n
         TYPE(rpe_var) :: z
-        IF (PRESENT(n)) THEN
-            z%sbits = n
-        END IF
         z = x
     END FUNCTION rpe_literal_alternate
 
@@ -449,9 +417,6 @@ CONTAINS
         INTEGER,           INTENT(IN) :: x
         INTEGER, OPTIONAL, INTENT(IN) :: n
         TYPE(rpe_var) :: z
-        IF (PRESENT(n)) THEN
-            z%sbits = n
-        END IF
         z = x
     END FUNCTION rpe_literal_integer
 
@@ -477,9 +442,6 @@ CONTAINS
         INTEGER(KIND=8),           INTENT(IN) :: x
         INTEGER,         OPTIONAL, INTENT(IN) :: n
         TYPE(rpe_var) :: z
-        IF (PRESENT(n)) THEN
-            z%sbits = n
-        END IF
         z = x
     END FUNCTION rpe_literal_long
 

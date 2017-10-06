@@ -191,8 +191,8 @@ CONTAINS
         IF (RPE_ACTIVE) THEN
             ! Split the input into real and imaginary parts, and cast each to a
             ! double-precision value.
-            re = REAL(realpart(x%val), RPE_DOUBLE_KIND)
-            im = REAL(imagpart(x%val), RPE_DOUBLE_KIND)
+            re = REAL(real(x%val), RPE_DOUBLE_KIND)
+            im = REAL(aimag(x%val), RPE_DOUBLE_KIND)
             n = RPE_DEFAULT_SBITS
 
             re = truncate_significand(re, n)

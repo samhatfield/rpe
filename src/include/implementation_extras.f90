@@ -211,6 +211,31 @@
         z = x%val * y%val
     END FUNCTION mul_rpe_rpe_complex
 
+    ELEMENTAL FUNCTION mul_rpe_realalt_complex (x, y) RESULT (z)
+        TYPE(rpe_var), INTENT(IN) :: x
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z = x%val * y
+    END FUNCTION mul_rpe_realalt_complex
+
+    ELEMENTAL FUNCTION mul_realalt_complex_rpe (x, y) RESULT (z)
+        COMPLEX(KIND=RPE_ALTERNATE_KIND), INTENT(IN) :: x
+        TYPE(rpe_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z = x * y%val
+    END FUNCTION mul_realalt_complex_rpe
+
+    !-------------------------------------------------------------------
+    ! Overloaded definition for (/):
+    !
+
+    ELEMENTAL FUNCTION div_rpe_complex_rpe (x, y) RESULT (z)
+        TYPE(rpe_complex_var), INTENT(IN) :: x
+        TYPE(rpe_var), INTENT(IN) :: y
+        TYPE(rpe_complex_var) :: z
+        z = x%val / y%val
+    END FUNCTION div_rpe_complex_rpe
+
     !-------------------------------------------------------------------
     ! Overloaded definition for CONJG:
     !
@@ -238,7 +263,7 @@
     ELEMENTAL FUNCTION realpart_rpe_complex (x) RESULT(z)
         TYPE(rpe_complex_var), INTENT(IN) :: x
         TYPE(rpe_var) :: z
-        z = realpart(x%val)
+        z = real(x%val)
     END FUNCTION realpart_rpe_complex
 
     !-------------------------------------------------------------------
@@ -248,7 +273,7 @@
     ELEMENTAL FUNCTION imagpart_rpe_complex (x) RESULT(z)
         TYPE(rpe_complex_var), INTENT(IN) :: x
         TYPE(rpe_var) :: z
-        z = imagpart(x%val)
+        z = aimag(x%val)
     END FUNCTION imagpart_rpe_complex
 
     !-------------------------------------------------------------------

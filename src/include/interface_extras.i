@@ -33,7 +33,13 @@
         MODULE PROCEDURE mul_realalt_rpe_complex
         MODULE PROCEDURE mul_rpe_complex_rpe
         MODULE PROCEDURE mul_rpe_rpe_complex
+        MODULE PROCEDURE mul_rpe_realalt_complex
+        MODULE PROCEDURE mul_realalt_complex_rpe
     END INTERFACE OPERATOR(*)
+
+    INTERFACE OPERATOR(/)
+        MODULE PROCEDURE div_rpe_complex_rpe
+    END INTERFACE OPERATOR(/)
 
     PUBLIC :: CONJG
     INTERFACE CONJG

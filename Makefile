@@ -37,7 +37,7 @@ endif
 
 # Set the required compiler flags for each supported compiler.
 ifneq (,$(findstring gfortran,$(F90)))
-FFLAGS += -J$(moduledir)
+FFLAGS += -J$(moduledir) -O2
 endif
 ifneq (,$(findstring ifort,$(F90)))
 FFLAGS += -module $(moduledir)
